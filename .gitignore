@@ -1,0 +1,10 @@
+.next
+node_modules
+.env
+.env.local
+coverage
+tsconfig.tsbuildinfo
+.codex
+.claude
+.agents
+skills-lock.json
