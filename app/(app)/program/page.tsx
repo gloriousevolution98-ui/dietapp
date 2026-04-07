@@ -11,19 +11,17 @@ export default async function ProgramPage() {
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (!user) {
-    return null;
-  }
-
-  const { data: programs } = await supabase
-    .from("workout_programs")
-    .select("*")
-    .eq("user_id", user.id)
-    .order("is_active", { ascending: false })
-    .order("created_at", { ascending: false });
+  const { data: programs } = user
+    ? await supabase
+        .from("workout_programs")
+        .select("*")
+        .eq("user_id", user.id)
+        .order("is_active", { ascending: false })
+        .order("created_at", { ascending: false })
+    : { data: [] };
 
   const activeProgram = (programs ?? []).find((program) => program.is_active) ?? null;
-  const { data: days } = activeProgram
+  const { data: days } = activeProgram && user
     ? await supabase
         .from("workout_program_days")
         .select("*")

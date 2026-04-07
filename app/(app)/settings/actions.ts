@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { AUTH_DISABLED_MESSAGE } from "@/lib/auth/mode";
 import { profileDraftSchema } from "@/lib/schema/profile";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
@@ -27,7 +28,7 @@ export async function saveProfileAction(
   } = await supabase.auth.getUser();
 
   if (userError || !user) {
-    return { success: false, error: "로그인이 필요합니다." };
+    return { success: false, error: AUTH_DISABLED_MESSAGE };
   }
 
   const { error } = await supabase.from("profiles").upsert(

@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import { isAuthEnabled } from "@/lib/auth/mode";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 type LoginPageProps = {
@@ -22,6 +23,10 @@ function getErrorMessage(error: string) {
 }
 
 export default async function LoginPage({ searchParams }: LoginPageProps) {
+  if (!isAuthEnabled()) {
+    redirect("/");
+  }
+
   const supabase = await createSupabaseServerClient();
   const {
     data: { user },
@@ -69,7 +74,7 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
           로그인
         </h1>
         <p className="mt-3 text-sm leading-6 text-[var(--muted)]">
-          Supabase magic link로 MVP 인증을 먼저 연결합니다.
+          이메일 로그인으로 인증합니다.
         </p>
         {status === "sent" ? (
           <p className="mt-4 rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm leading-6 text-emerald-700">
@@ -100,7 +105,7 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
             type="submit"
             className="w-full rounded-2xl bg-[var(--accent)] px-4 py-3 text-base font-medium text-white"
           >
-            매직 링크 보내기
+            로그인 메일 보내기
           </button>
         </form>
       </section>

@@ -1,5 +1,6 @@
 import { DashboardShell } from "@/components/dashboard/dashboard-shell";
 import { buildDashboardSnapshot } from "@/lib/domain/dashboard/build-dashboard-snapshot";
+import { mockDashboardSnapshot } from "@/lib/mocks/dashboard";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 export default async function DashboardPage() {
@@ -9,7 +10,7 @@ export default async function DashboardPage() {
   } = await supabase.auth.getUser();
 
   if (!user) {
-    return null;
+    return <DashboardShell snapshot={mockDashboardSnapshot} />;
   }
 
   const today = new Date();

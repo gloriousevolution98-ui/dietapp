@@ -1,8 +1,13 @@
 import { type EmailOtpType } from "@supabase/supabase-js";
 import { NextResponse, type NextRequest } from "next/server";
+import { isAuthEnabled } from "@/lib/auth/mode";
 import { createSupabaseRouteClient } from "@/lib/supabase/server";
 
 export async function GET(request: NextRequest) {
+  if (!isAuthEnabled()) {
+    return NextResponse.redirect(new URL("/", request.url));
+  }
+
   const requestUrl = new URL(request.url);
   const code = requestUrl.searchParams.get("code");
   const tokenHash = requestUrl.searchParams.get("token_hash");

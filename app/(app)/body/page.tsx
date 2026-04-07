@@ -8,16 +8,14 @@ export default async function BodyPage() {
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (!user) {
-    return null;
-  }
-
-  const { data: metrics } = await supabase
-    .from("body_metrics")
-    .select("*")
-    .eq("user_id", user.id)
-    .order("recorded_on", { ascending: false })
-    .limit(10);
+  const { data: metrics } = user
+    ? await supabase
+        .from("body_metrics")
+        .select("*")
+        .eq("user_id", user.id)
+        .order("recorded_on", { ascending: false })
+        .limit(10)
+    : { data: [] };
 
   return (
     <BodyMetricsScreen

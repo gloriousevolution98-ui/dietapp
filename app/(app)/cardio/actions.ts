@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { cardioLogDraftSchema } from "@/lib/schema/logs";
+import { AUTH_DISABLED_MESSAGE } from "@/lib/auth/mode";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 export type SaveCardioLogResult =
@@ -29,7 +30,7 @@ export async function saveCardioLogAction(
   if (userError || !user) {
     return {
       success: false,
-      error: "로그인이 필요합니다.",
+      error: AUTH_DISABLED_MESSAGE,
     };
   }
 

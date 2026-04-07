@@ -11,30 +11,28 @@ export default async function MealsPage() {
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (!user) {
-    return null;
-  }
-
-  const [{ data: mealsData }, { data: favoriteFoodRows }] = await Promise.all([
-    supabase
-      .from("meals")
-      .select("*")
-      .eq("user_id", user.id)
-      .order("eaten_at", { ascending: false })
-      .order("created_at", { ascending: false })
-      .limit(20),
-    supabase
-      .from("food_items")
-      .select("*")
-      .eq("user_id", user.id)
-      .eq("is_favorite", true)
-      .eq("is_active", true)
-      .order("name", { ascending: true })
-      .limit(8),
-  ]);
+  const [{ data: mealsData }, { data: favoriteFoodRows }] = user
+    ? await Promise.all([
+        supabase
+          .from("meals")
+          .select("*")
+          .eq("user_id", user.id)
+          .order("eaten_at", { ascending: false })
+          .order("created_at", { ascending: false })
+          .limit(20),
+        supabase
+          .from("food_items")
+          .select("*")
+          .eq("user_id", user.id)
+          .eq("is_favorite", true)
+          .eq("is_active", true)
+          .order("name", { ascending: true })
+          .limit(8),
+      ])
+    : [{ data: [] }, { data: [] }];
 
   const mealIds = (mealsData ?? []).map((meal) => meal.id);
-  const { data: mealEntriesData } = mealIds.length
+  const { data: mealEntriesData } = mealIds.length && user
     ? await supabase
         .from("meal_entries")
         .select("*")

@@ -9,15 +9,13 @@ export default async function SettingsPage() {
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (!user) {
-    return null;
-  }
-
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("*")
-    .eq("user_id", user.id)
-    .maybeSingle();
+  const { data: profile } = user
+    ? await supabase
+        .from("profiles")
+        .select("*")
+        .eq("user_id", user.id)
+        .maybeSingle()
+    : { data: null };
 
   const initialValue: ProfileDraft = {
     display_name: profile?.display_name ?? undefined,

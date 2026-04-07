@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { AUTH_DISABLED_MESSAGE } from "@/lib/auth/mode";
 import { parseCsv } from "@/lib/domain/import/parse-csv";
 import { foodItemDraftSchema } from "@/lib/schema/food";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
@@ -72,7 +73,7 @@ export async function importFoodMasterAction(
   if (userError || !user) {
     return {
       success: false,
-      error: "로그인이 필요합니다.",
+      error: AUTH_DISABLED_MESSAGE,
     };
   }
 

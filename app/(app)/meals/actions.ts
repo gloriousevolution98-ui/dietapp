@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { AUTH_DISABLED_MESSAGE } from "@/lib/auth/mode";
 import {
   buildLoggedMealFromDraft,
   calculateMealTotals,
@@ -38,7 +39,7 @@ export async function saveMealAction(input: unknown): Promise<SaveMealResult> {
   if (userError || !user) {
     return {
       success: false,
-      error: "로그인이 필요합니다.",
+      error: AUTH_DISABLED_MESSAGE,
     };
   }
 

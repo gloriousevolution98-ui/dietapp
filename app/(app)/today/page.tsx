@@ -9,17 +9,15 @@ export default async function TodayPage() {
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (!user) {
-    return null;
-  }
-
   const today = new Date().toISOString().slice(0, 10);
-  const { data: todayCheckin } = await supabase
-    .from("daily_checkins")
-    .select("*")
-    .eq("user_id", user.id)
-    .eq("date", today)
-    .maybeSingle();
+  const { data: todayCheckin } = user
+    ? await supabase
+        .from("daily_checkins")
+        .select("*")
+        .eq("user_id", user.id)
+        .eq("date", today)
+        .maybeSingle()
+    : { data: null };
 
   const initialValue: DailyCheckinDraft = {
     date: today,

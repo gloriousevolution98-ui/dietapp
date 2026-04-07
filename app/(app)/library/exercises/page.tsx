@@ -11,16 +11,14 @@ export default async function ExerciseLibraryPage() {
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (!user) {
-    return null;
-  }
-
-  const { data: exercises } = await supabase
-    .from("exercise_items")
-    .select("*")
-    .eq("user_id", user.id)
-    .order("is_active", { ascending: false })
-    .order("name", { ascending: true });
+  const { data: exercises } = user
+    ? await supabase
+        .from("exercise_items")
+        .select("*")
+        .eq("user_id", user.id)
+        .order("is_active", { ascending: false })
+        .order("name", { ascending: true })
+    : { data: [] };
 
   return (
     <ExerciseLibraryScreen

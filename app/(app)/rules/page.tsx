@@ -7,16 +7,14 @@ export default async function RulesPage() {
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (!user) {
-    return null;
-  }
-
-  const { data: rules } = await supabase
-    .from("recommendation_rules")
-    .select("*")
-    .eq("user_id", user.id)
-    .order("priority", { ascending: true })
-    .order("created_at", { ascending: false });
+  const { data: rules } = user
+    ? await supabase
+        .from("recommendation_rules")
+        .select("*")
+        .eq("user_id", user.id)
+        .order("priority", { ascending: true })
+        .order("created_at", { ascending: false })
+    : { data: [] };
 
   return <RulesScreen rules={rules ?? []} />;
 }

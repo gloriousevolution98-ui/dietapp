@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { AUTH_DISABLED_MESSAGE } from "@/lib/auth/mode";
 import {
   workoutProgramDayDraftSchema,
   workoutProgramDraftSchema,
@@ -30,7 +31,7 @@ export async function saveWorkoutProgramAction(
   } = await supabase.auth.getUser();
 
   if (userError || !user) {
-    return { success: false, error: "로그인이 필요합니다." };
+    return { success: false, error: AUTH_DISABLED_MESSAGE };
   }
 
   if (parsed.data.is_active) {
@@ -79,7 +80,7 @@ export async function saveWorkoutProgramDayAction(
   } = await supabase.auth.getUser();
 
   if (userError || !user) {
-    return { success: false, error: "로그인이 필요합니다." };
+    return { success: false, error: AUTH_DISABLED_MESSAGE };
   }
 
   const { data: program } = await supabase
